@@ -1,4 +1,4 @@
-# Keras Implementation of [Convolutional Sketch Inversion](https://arxiv.org/abs/1606.03073)
+# [Keras](https://keras.io/) Implementation of [Convolutional Sketch Inversion](https://arxiv.org/abs/1606.03073)
 ## Instructions:
 * Prepare Dataset
 ...
