@@ -12,6 +12,19 @@ import numpy as np
 import h5py
 
 
+def load_with_size(db_name, img_size):
+    with h5py.File(db_name, 'r') as hf:
+        sketch = np.array(hf['lfw_%s_sketch' % img_size]).astype(np.float32)
+        sketch = sketch.transpose((0, 2, 3, 1))
+        color = np.array(hf['lfw_%s_img' % img_size]).astype(np.float32) / 255.
+        color = color.transpose((0, 2, 3, 1))
+        weights = np.array(hf['lfw_%s_vgg' % img_size])
+        print 'sketch data has shape:', sketch.shape
+        print 'color data has shape:', color.shape
+        print 'vgg_16 weights data has shape', weights.shape
+        return sketch, color, weights
+
+
 def load(db_name):
     with h5py.File(db_name, 'r') as hf:
         sketch = np.array(hf['lfw_sketch_data']).astype(np.float32)
@@ -54,6 +67,22 @@ def convolutional_block(x, block_idx, nb_filter, k_size=3, subsample=(1, 1)):
     x = Convolution2D(nb_filter, k_size, k_size, name=name, border_mode="same", subsample=subsample)(x)
     x = BatchNormalization(mode=2, axis=1)(x)
     x = Activation("relu")(x)
+    return x
+
+
+def rescale(x):
+    x = (x + 1) / 2.
+    return x
+
+
+def last_convolutional_block(x, block_idx, nb_filter, k_size=3, subsample=(1, 1)):
+    name = "block%s_conv2D" % block_idx
+    x = Convolution2D(nb_filter, k_size, k_size, name=name, border_mode="same", subsample=subsample)(x)
+    x = BatchNormalization(mode=2, axis=1)(x)
+    x = Activation("sigmoid")(x)
+    # # scale to (0,1) if use tanh
+    # rescale_layer = Lambda(rescale)
+    # x = rescale_layer(x)
     return x
 
 
@@ -103,7 +132,7 @@ def edge2color(img_dim, batch_size):
     h10 = deconvolutional_block(h9, 10, 32, k_size=3,
                                 output_shape=(batch_size, img_dim[0], img_dim[1], 32), subsample=(2, 2))
     # final conv block
-    h11 = convolutional_block(h10, 11, 3, k_size=9, subsample=(1, 1))
+    h11 = last_convolutional_block(h10, 11, 3, k_size=9, subsample=(1, 1))
 
     # extract vgg feature
     vgg_16 = vgg16.VGG16(include_top=False, weights='imagenet', input_tensor=None)
