@@ -5,7 +5,7 @@ import keras.backend as K
 import sys
 # Utils
 sys.path.append("utils/")
-from simple_utils import plot_batch
+from simple_utils import plot_batch_train, plot_batch_eval
 
 import os
 import time
@@ -56,7 +56,7 @@ def train(batch_size, n_batch_per_epoch, nb_epoch, sketch, color, weights, tag, 
             progbar.add(batch_size, values=[('pixel_loss', train_loss[1]), ('feature_loss', train_loss[2])])
             # if batch_counter >= n_batch_per_epoch:
             if global_counter % 50 == 1:
-                plot_batch(model, img_dim[0], batch_size, batch_sk, batch_co, epoch, idx, tag)
+                plot_batch_train(model, img_dim[0], batch_size, batch_sk, batch_co, epoch, idx, tag)
             global_counter += 1
 
             if batch_counter >= n_batch_per_epoch:
@@ -66,16 +66,28 @@ def train(batch_size, n_batch_per_epoch, nb_epoch, sketch, color, weights, tag, 
 
         if save_weight:
             # save weights every epoch
-            weights_path = '%s/%s_weights_epoch_%s.h5' % (model_name, model_name, epoch)
+            weights_path = '%s/%s_weights_epoch_%s.h5' % (model_name, tag, epoch)
             if not os.path.exists('%s' % model_name):
                 os.mkdir('%s' % model_name)
             model.save_weights(weights_path, overwrite=True)
 
 
+def evaluate(batch_size, tag, epoch, sketch, img_dim=[64,64,1]):
+    model, model_name = edge2color(img_dim, batch_size=batch_size)
+    model.load_weights('%s/%s_weights_epoch_%s.h5' % (model_name, tag, epoch))
+    print 'Load Model Complete'
+    plot_batch_eval(model, img_dim[0], batch_size=batch_size, sketch=sketch, tag=tag)
+
+
 if __name__ == '__main__':
-    sketch, color, weights = load_with_size(os.path.expanduser
-                                 ('~/Desktop/hdf5/clear/color_ir_sketch.h5'), img_size=128)
+    # sketch, color, weights = load_with_size(os.path.expanduser
+    #                              ('~/Desktop/hdf5/clear/color_ir_sketch.h5'), img_size=128)
                                  # ('~/Desktop/hdf5/clear/database_train.h5'))
                                  # ('~/Desktop/DeepLearningImplementations/DFI/data/processed/lfw_224_data.h5'))
-    train(batch_size=16, n_batch_per_epoch=0, nb_epoch=10000, sketch=sketch, color=color,
-          weights=weights, tag='1-1-1batch-128-22', save_weight=0, img_dim=[128,128,1])
+    img_dim = [128, 128, 1]
+    tag = '1-1-1batch-128-22'
+    # train(batch_size=16, n_batch_per_epoch=0, nb_epoch=10000, sketch=sketch, color=color,
+    #       weights=weights, tag=tag, save_weight=1, img_dim=img_dim)
+
+    ir_sk = load_ir_sk_with_size(os.path.expanduser('~/Desktop/hdf5/clear/color_ir_sketch.h5'), img_size=128)
+    evaluate(batch_size=16, tag=tag, epoch=3, sketch=ir_sk[100:164], img_dim=img_dim)

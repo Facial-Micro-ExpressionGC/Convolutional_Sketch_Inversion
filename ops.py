@@ -22,7 +22,7 @@ def load_with_size(db_name, img_size):
         print 'sketch data has shape:', sketch.shape
         print 'color data has shape:', color.shape
         print 'vgg_16 weights data has shape', weights.shape
-        return sketch, color, weights
+    return sketch, color, weights
 
 
 def load(db_name):
@@ -37,6 +37,13 @@ def load(db_name):
         print 'vgg_16 weights data has shape', weights.shape
         return sketch, color, weights
 
+
+def load_ir_sk_with_size(db_name, img_size):
+    with h5py.File(db_name,'r') as hf:
+        sketch = np.array(hf['ir_%s_sketch' % img_size]).astype(np.float32)
+        sketch = sketch.transpose((0, 2, 3, 1))
+        print 'IR sketch data has shape:', sketch.shape
+    return sketch
 
 def residual_block(x, block_idx, nb_filter, bn=True, weight_decay=0, k_size=3):
 
