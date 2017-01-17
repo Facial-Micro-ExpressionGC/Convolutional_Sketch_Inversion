@@ -19,10 +19,13 @@ def load_with_size(db_name, img_size):
         color = np.array(hf['lfw_%s_img' % img_size]).astype(np.float32) / 255.
         color = color.transpose((0, 2, 3, 1))
         weights = np.array(hf['lfw_%s_vgg' % img_size])
+        sk_ir = np.array(hf['ir_%s_sketch' % img_size])[0:16]
+        sk_ir = sk_ir.transpose((0, 2, 3, 1))
         print 'sketch data has shape:', sketch.shape
         print 'color data has shape:', color.shape
         print 'vgg_16 weights data has shape', weights.shape
-    return sketch, color, weights
+        print 'IR sketch data sample has shape', sk_ir.shape
+    return sketch, color, weights, sk_ir
 
 
 def load(db_name):

@@ -30,7 +30,7 @@ def variation_loss(y_true, y_pred):
     return K.sum(K.sqrt(a+b))
 
 
-def train(batch_size, n_batch_per_epoch, nb_epoch, sketch, color, weights, tag, save_weight=1, img_dim=[64,64,1]):
+def train(batch_size, n_batch_per_epoch, nb_epoch, sketch, color, weights, tag, sk_ir, save_weight=1, img_dim=[64,64,1]):
     opt = Adam(lr=1e-4, beta_1=0.9, beta_2=0.999, epsilon=1e-8)
     model, model_name = edge2color(img_dim, batch_size=batch_size)
 
@@ -47,6 +47,13 @@ def train(batch_size, n_batch_per_epoch, nb_epoch, sketch, color, weights, tag, 
         if n_batch_per_epoch >= batch_idxs or n_batch_per_epoch == 0:
             n_batch_per_epoch = batch_idxs
         progbar = generic_utils.Progbar(n_batch_per_epoch * batch_size)
+
+        sk_val = sketch[0:16]
+        co_val = color[0:16]
+        sketch = sketch[16:]
+        color = color[16:]
+        weights = weights[16:]
+
         for idx in range(batch_idxs):
             batch_sk = sketch[idx * batch_size: (idx + 1) * batch_size]
             batch_co = color[idx * batch_size: (idx + 1) * batch_size]
@@ -57,6 +64,8 @@ def train(batch_size, n_batch_per_epoch, nb_epoch, sketch, color, weights, tag, 
             # if batch_counter >= n_batch_per_epoch:
             if global_counter % 50 == 1:
                 plot_batch_train(model, img_dim[0], batch_size, batch_sk, batch_co, epoch, idx, tag)
+                plot_batch_eval(model, img_dim[0], batch_size, sk_val, tag=tag+'_val')
+                plot_batch_eval(model, img_dim[0], batch_size, sk_ir, tag=tag+'_test')
             global_counter += 1
 
             if batch_counter >= n_batch_per_epoch:
@@ -80,14 +89,12 @@ def evaluate(batch_size, tag, epoch, sketch, img_dim=[64,64,1]):
 
 
 if __name__ == '__main__':
-    # sketch, color, weights = load_with_size(os.path.expanduser
-    #                              ('~/Desktop/hdf5/clear/color_ir_sketch.h5'), img_size=128)
+    sketch, color, weights, sk_ir = load_with_size(os.path.expanduser
+                                   ('~/Desktop/hdf5/clear/color_ir_sketch.h5'), img_size=128)
                                  # ('~/Desktop/hdf5/clear/database_train.h5'))
                                  # ('~/Desktop/DeepLearningImplementations/DFI/data/processed/lfw_224_data.h5'))
     img_dim = [128, 128, 1]
-    tag = '1-1-1batch-128-22'
-    # train(batch_size=16, n_batch_per_epoch=0, nb_epoch=10000, sketch=sketch, color=color,
-    #       weights=weights, tag=tag, save_weight=1, img_dim=img_dim)
+    tag = '1-1-4batch-128'
+    train(batch_size=16, n_batch_per_epoch=4, nb_epoch=10000, sketch=sketch, color=color,
+          weights=weights, tag=tag, sk_ir=sk_ir, save_weight=0, img_dim=img_dim)
 
-    ir_sk = load_ir_sk_with_size(os.path.expanduser('~/Desktop/hdf5/clear/color_ir_sketch.h5'), img_size=128)
-    evaluate(batch_size=16, tag=tag, epoch=3, sketch=ir_sk[100:164], img_dim=img_dim)
