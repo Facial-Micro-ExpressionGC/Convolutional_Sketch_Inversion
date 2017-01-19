@@ -25,5 +25,5 @@ optional arguments:
                         Batch size for VGG predictions
 
 ## Note:
-- Scripts for building black&white images hasn't been provided!
+- Scripts for building black&white images hasn't been checked!
 - Modified from [tdeboissiere](https://github.com/tdeboissiere).
