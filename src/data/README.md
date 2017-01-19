@@ -35,4 +35,4 @@ optional arguments:
 
 `python make_dataset.py /home/user/GitHub/deep-learning-models`
 
-# Modified from @tdeboissiere, thank you!
+_Modified from [tdeboissiere](https://github.com/tdeboissiere), thank you!_
