@@ -1,10 +1,11 @@
-# [Keras](https://keras.io/) Implementation of [Convolutional Sketch Inversion](https://arxiv.org/abs/1606.03073)
+# [Keras](https://keras.io/) Implementation of Convolutional Sketch Inversion
+
 ## Instruction
 ### 1. Prepare Dataset
-See [Instructions](https://github.com/TengdaHan/Convolutional_Sketch_Inversion/tree/master/src/data)
+Follow [these instructions](https://github.com/TengdaHan/Convolutional_Sketch_Inversion/tree/master/src/data).
 
 ### 2. Training
-See [Instructions](https://github.com/TengdaHan/Convolutional_Sketch_Inversion/tree/master/src)
+Follow [these instructions](https://github.com/TengdaHan/Convolutional_Sketch_Inversion/tree/master/src).
 
 ## Introduction
 * Network Structure
