@@ -1,12 +1,11 @@
 # [Keras](https://keras.io/) Implementation of [Convolutional Sketch Inversion](https://arxiv.org/abs/1606.03073)
 ## Instruction
-* Prepare Dataset
-...
+1. Prepare Dataset
+See [Instructions](https://github.com/TengdaHan/Convolutional_Sketch_Inversion/tree/master/src/data)
 
-* To train the model, simply run in command window:
-```
-python model.py
-```
+2. Training
+See [Instructions](https://github.com/TengdaHan/Convolutional_Sketch_Inversion/tree/master/src)
+
 ## Introduction
 * Network Structure
 
@@ -25,4 +24,4 @@ Layer|Type|in_channels|out_channels|ksize|stride|pad|normalization|activation
 11|con.|32|3|9|1|4|BN|tanh
 
 ## Reference: 
-Yağmur Güçlütürk, Umut Güçlü, Rob van Lier, Marcel A. J. van Gerven, 2016, Convolutional Sketch Inversion, https://arxiv.org/abs/1606.03073
+[Convolutional Sketch Inversion](https://arxiv.org/abs/1606.03073) by Yağmur Güçlütürk, Umut Güçlü, Rob van Lier, Marcel A. J. van Gerven, (2016).
