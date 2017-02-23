@@ -18,12 +18,11 @@ In `data/raw` should have the following folder structure:
 
 optional arguments:
 
-    -h, --help            show this help message and exit
-    --img_size IMG_SIZE   Desired Width == Height
-    --do_plot DO_PLOT     Whether to visualize saved images
-    --batch_size BATCH_SIZE
-                        Batch size for VGG predictions
+    -h, --help                  show this help message and exit
+    --img_size IMG_SIZE         Desired Width == Height
+    --do_plot DO_PLOT           Whether to visualize saved images
+    --batch_size BATCH_SIZE     Batch size for VGG predictions
 
 ## Note:
-- Scripts for building black&white images hasn't been checked!
+- If 'Out Of Memory' error occurs when computing VGG features, reduce the batch size or image size by adding optional arguments. 
 - Modified from [tdeboissiere](https://github.com/tdeboissiere).
