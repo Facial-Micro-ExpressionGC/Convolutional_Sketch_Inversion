@@ -1,2 +1,2 @@
 # Training
-* Run in command: `python train.py`
+* Run in terminal: `python train.py`
