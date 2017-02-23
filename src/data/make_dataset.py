@@ -106,6 +106,7 @@ def compute_vgg(size, batch_size=32):
     with h5py.File(hdf5_file, "a") as hf:
         X = hf["lfw_%s_color" % size][:].astype(np.float32)
         X = preprocess_input(X)
+        X = np.transpose(X,(0,2,3,1))
         # compute features
         base_model = vgg16.VGG16(weights='imagenet', include_top=False)
         model = Model(input=base_model.input, output=base_model.get_layer('block2_conv2').output)
@@ -153,8 +154,8 @@ def check_HDF5(size):
 if __name__ == '__main__':
 
     parser = argparse.ArgumentParser(description='Build dataset')
-    parser.add_argument("keras_model_path", type=str,
-                        help="Path to keras deep-learning-models directory")
+    # parser.add_argument("keras_model_path", type=str,
+    #                     help="Path to keras deep-learning-models directory")
     parser.add_argument('--img_size', default=64, type=int,
                         help='Desired Width == Height')
     parser.add_argument('--do_plot', default=False, type=bool,
