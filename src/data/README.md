@@ -1,4 +1,4 @@
-# Building the data
+# Generate dataset
 ## Step 1. Download LFW
 
 - Go to http://vis-www.cs.umass.edu/lfw/lfw-deepfunneled.tgz to download aligned LFW images
