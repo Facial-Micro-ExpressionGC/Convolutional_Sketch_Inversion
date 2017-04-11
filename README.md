@@ -24,5 +24,21 @@ Layer|Type|in_channels|out_channels|ksize|stride|pad|normalization|activation
 10|dec.|64|32|3|2|1|BN|ReLU
 11|con.|32|3|9|1|4|BN|tanh
 
+* Requirement
+```
+keras
+sys
+os
+time
+cv2
+h5py
+parmap
+argparse
+numpy
+pandas
+tqdm
+matplotlib
+```
+
 ## Reference: 
 [Convolutional Sketch Inversion](https://arxiv.org/abs/1606.03073) by Yağmur Güçlütürk, Umut Güçlü, Rob van Lier, Marcel A. J. van Gerven, (2016).
