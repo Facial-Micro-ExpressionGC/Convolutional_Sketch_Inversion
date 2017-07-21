@@ -23,6 +23,10 @@ optional arguments:
     --do_plot DO_PLOT           Whether to visualize saved images
     --batch_size BATCH_SIZE     Batch size for VGG predictions
 
+## Step 3. Create sketch images
+
+- Sorry I haven't update a script to process images and get sketches. But I use [this method|http://www.askaswiss.com/2016/01/how-to-create-pencil-sketch-opencv-python.html] for my previous experiments. You can have a try!
+
 ## Note:
 - If 'Out Of Memory' error occurs when computing VGG features, reduce the batch size or image size by adding optional arguments. 
 - Modified from [tdeboissiere](https://github.com/tdeboissiere).
