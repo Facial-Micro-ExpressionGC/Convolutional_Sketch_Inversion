@@ -25,7 +25,8 @@ optional arguments:
 
 ## Step 3. Create sketch images
 
-- Sorry I haven't update a script to process images and get sketches. But I use [this method](http://www.askaswiss.com/2016/01/how-to-create-pencil-sketch-opencv-python.html) for my previous experiments. You can have a try!
+- ~~Sorry I haven't update a script to process images and get sketches. But I use [this method](http://www.askaswiss.com/2016/01/how-to-create-pencil-sketch-opencv-python.html) for my previous experiments. You can have a try!~~
+- Update at Feb. 2018： Sketch conversion is included in `make_dataset.py` now.
 
 ## Note:
 - If 'Out Of Memory' error occurs when computing VGG features, reduce the batch size or image size by adding optional arguments. 
