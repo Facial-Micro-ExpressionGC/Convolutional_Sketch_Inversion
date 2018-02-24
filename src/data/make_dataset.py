@@ -10,11 +10,32 @@ from tqdm import tqdm as tqdm
 import matplotlib.pylab as plt
 
 
+def dodgeV2(image, mask):
+  return cv2.divide(image, 255-mask, scale=256)
+
+
+def make_sketch(filename):
+    """
+    Create sketch for the RGB image
+    """
+    img = cv2.imread(filename)
+    img_gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    img_gray_inv = 255 - img_gray
+    img_blur = cv2.GaussianBlur(img_gray_inv, ksize=(21, 21), sigmaX=0, sigmaY=0)
+    img_blend = dodgeV2(img_gray, img_blur)
+    return img_blend
+
+def format_sketch(filename, size):
+    sketch = make_sketch(filename)
+    sketch = sketch[20:220, 20:220]
+    sketch = cv2.resize(sketch, (size, size), interpolation=cv2.INTER_AREA)
+    sketch = sketch.reshape((1, size, size, 1)).transpose(0, 3, 1, 2)
+    return sketch
+
 def format_image(img_path, size):
     """
     Load img with opencv and reshape
     """
-
     img_color = cv2.imread(img_path)
     img_color = img_color[20:220, 20:220, :]  # crop to center around face (empirical values)
 
@@ -70,6 +91,11 @@ def build_HDF5(size):
                                         maxshape=(None, 3, size, size),
                                         dtype=np.uint8)
 
+        data_sketch = hfw.create_dataset("lfw_%s_sketch" % size,
+                                        (0, 1, size, size),
+                                        maxshape=(None, 1, size, size),
+                                        dtype=np.uint8)
+
         label = hfw.create_dataset("labels", data=df_attr[list_col_labels].values)
         label.attrs["label_names"] = list_col_labels
 
@@ -83,15 +109,23 @@ def build_HDF5(size):
         for chunk_idx in tqdm(arr_chunks):
 
             list_img_path = arr_img[chunk_idx].tolist()
-            output = parmap.map(format_image, list_img_path, size, parallel=True)
+            
+            output = parmap.map(format_image, list_img_path, size)
+            output_sketch = parmap.map(format_sketch, list_img_path, size)
 
             arr_img_color = np.concatenate(output, axis=0)
+
+            arr_img_sketch = np.concatenate(output_sketch, axis=0)
 
             # Resize HDF5 dataset
             data_color.resize(data_color.shape[0] + arr_img_color.shape[0], axis=0)
 
             data_color[-arr_img_color.shape[0]:] = arr_img_color.astype(np.uint8)
 
+
+            data_sketch.resize(data_sketch.shape[0] + arr_img_sketch.shape[0], axis=0)
+
+            data_sketch[-arr_img_sketch.shape[0]:] = arr_img_sketch.astype(np.uint8)
 
 def compute_vgg(size, batch_size=32):
     """
